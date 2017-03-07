@@ -18,26 +18,19 @@ static int recv_str(int sock, char *buf, int max_len);
 static int send_byte(int sock, const char *buf, int len);
 static int recv_byte(int sock, char *buf, int len);
 static int eat_byte(int sock, int len);
-
 static int start_server(int port);
-static int start_client(const char *addr, int port);
 
 static char g_buf[BUF_SIZE];
 
 int main(int argc, char **argv)
 {
 				int i, r, port;
-				int server_mode = 0;
-				char *addr;
+				//char *addr;
 
 				port = DEFAULT_PORT;
-				server_mode = 0;
-				addr = "127.0.0.1";
-
+				//addr = "127.0.0.1";
 				for (i = 1; i < argc; i++) {
-								if (strcmp(argv[i], "-s") == 0)
-												server_mode = 1;
-								else if (strcmp(argv[i], "-p") == 0) {
+								if (strcmp(argv[i], "-p") == 0) {
 												i++;
 												if (i >= argc) {
 																printf("Error: must specify port number!\n");
@@ -45,20 +38,17 @@ int main(int argc, char **argv)
 												}
 
 												port = atoi(argv[i]);
+
 												if (port == 0) {
 																printf("Error: wrong port number!\n");
 																return -1;
 												}
 								} else {
-												addr = argv[i];
+												//addr = argv[i];
 								}
 				}
 
-				if (server_mode) {
-								r = start_server(port);
-				} else {
-								r = start_client(addr, port);
-				}
+				r = start_server(port);
 
 				return r;
 }
@@ -136,47 +126,6 @@ int start_server(int port)
 												printf("%s> %s\n", prompt, g_buf);
 								}
 				}
-				return 0;
-}
-
-int start_client(const char* addr, int port)
-{
-				int r ;
-				int sock;
-				struct sockaddr_in server_addr;
-				if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-								perror("start_client: socket()");
-								return -1;
-				}
-
-				memset(&server_addr, 0, sizeof(server_addr));
-				server_addr.sin_family = AF_INET;
-				server_addr.sin_port = htons(port);
-				if (!inet_aton(addr, &server_addr.sin_addr)) {
-								perror("start_client: inet_aton()");
-								return -1;
-				}
-
-				r = connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr));
-				if (r < 0) {
-								perror("start_client: connect()");
-								close(sock);
-								return -1;
-				}
-
-				for(;;) {
-								if (recv_str(sock, g_buf, sizeof(g_buf)) <= 0)
-												break;
-
-								printf(">%s\n", g_buf);
-
-								fgets(g_buf, sizeof(g_buf), stdin);
-								g_buf[strlen(g_buf) - 1] = '\0';
-
-								if (send_str(sock, g_buf) <= 0)
-												break;
-				}
-				close(sock);
 				return 0;
 }
 
