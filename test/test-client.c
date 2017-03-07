@@ -47,6 +47,7 @@ int main(int argc, char **argv)
 				}
 
 				r = start_client(addr, port);
+
 				return r;
 }
 
@@ -79,7 +80,7 @@ int start_client(const char* addr, int port)
 								if (recv_str(sock, g_buf, sizeof(g_buf)) <= 0)
 												break;
 
-								printf(">%s\n", g_buf);
+								printf("I am client >>> %s\n", g_buf);
 
 								fgets(g_buf, sizeof(g_buf), stdin);
 								g_buf[strlen(g_buf) - 1] = '\0';
