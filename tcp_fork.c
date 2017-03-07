@@ -195,6 +195,8 @@ int send_str(int sock, const char* str)
 				byte = send_byte(sock, str, len);
 				if (byte < 0)
 								return -1;
+
+				return 0;
 }
 
 int recv_str(int sock, char* buf, int max_len)
