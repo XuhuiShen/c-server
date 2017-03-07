@@ -116,7 +116,7 @@ int start_server(int port)
 
 								for (;;) {
 												// FIXME please use socketpair
-												if (send_str(sock, "OK") <= 0 ||
+												if (send_str(sock, "OK") < 0 ||
 																recv_str(sock, g_buf, sizeof(g_buf)) <= 0) {
 																printf("%s error or disconnected, "
 																				"socket is closing...\n", prompt);
