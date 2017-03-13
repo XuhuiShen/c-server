@@ -115,7 +115,6 @@ int start_server(int port)
 		printf("Accept remote %s,pid=%d.\n", prompt, getpid());
 
 		for (;;) {
-			// FIXME please use socketpair
 			if (send_str(sock, "OK") < 0 ||
 				recv_str(sock, g_buf, sizeof(g_buf)) <= 0) {
 				printf("%s error or disconnected, "
